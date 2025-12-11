@@ -1,0 +1,112 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Music Albums</title>
+
+    <link rel="stylesheet" href="{% static 'albums/css/styles.css' %}">
+
+    
+<script src="{% static 'albums/js/main.js' %}" defer></script>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo">🎵 Music Reviews</div>
+
+    <!-- SEARCH FORM -->
+    <form method="GET" action="{% url 'home' %}" class="search-bar">
+        <input 
+            type="text" 
+            name="q" 
+            placeholder="Search albums or artists..." 
+            value="{{ request.GET.q }}"
+        >
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- AUTH LINKS -->
+    <div>
+    {% if user.is_authenticated %}
+        <span>Welcome, {{ user.username }}!</span>
+
+
+{% if user.is_staff %}
+    <a href="{% url 'admin_requests_dashboard' %}" 
+       style="color:#00e676; margin-left:20px;">
+        Admin Dashboard
+    </a>
+{% endif %}
+
+
+
+        <!-- Playlist Button -->
+        <a href="{% url 'my_playlist' %}" style="color:#00e676; margin-left:20px;">
+    My Playlist
+</a>
+
+<a href="{% url 'request_album' %}" style="color:#00e676; margin-left:20px;">
+    Request Album
+</a>
+
+
+        <!-- Logout -->
+        <a href="{% url 'logout' %}" style="color: #00e676; margin-left: 20px;">Logout</a>
+
+    {% else %}
+        <a href="{% url 'login' %}" style="color: white; margin-right: 15px;">Login</a>
+        <a href="{% url 'register' %}" style="color: #00e676;">Sign Up</a>
+    {% endif %}
+</div>
+
+</nav>
+
+<!-- PAGE TITLE -->
+<h1 class="page-title">
+    {% if request.GET.q %}
+        Search Results for "{{ request.GET.q }}"
+    {% else %}
+        Top Albums
+    {% endif %}
+</h1>
+
+<!-- ALBUM GRID -->
+<div class="album-grid">
+    {% for a in albums %}
+    <div class="album-card">
+
+        <img src="{{ a.cover_url }}" alt="{{ a.title }}" class="album-cover">
+
+        <div class="album-info">
+            <h3>{{ a.title }}</h3>
+            <p class="artist">{{ a.artist }}</p>
+            <p class="genre">{{ a.genre }} • {{ a.year }}</p>
+        </div>
+
+        <!-- VIEW DETAILS BUTTON -->
+        <a href="{% url 'album_detail' a.id_str %}">
+            <button class="details-btn">View Details</button>
+        </a>
+
+    </div>
+    {% empty %}
+        <p style="color:#aaa; margin-left:40px;">No albums found.</p>
+    {% endfor %}
+</div>
+{% if messages %}
+    {% for message in messages %}
+        <div id="popup-message" class="popup-message">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+</body>
+</html>

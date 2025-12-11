@@ -1,0 +1,172 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Review</title>
+
+    <link rel="stylesheet" href="{% static 'albums/css/styles.css' %}">
+    <script src="{% static 'albums/js/main.js' %}" defer></script>
+
+   
+
+
+    <style>
+        /* Page background */
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0e0e0e;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Review Card Container */
+        .review-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #161616;
+            border-radius: 15px;
+            box-shadow: 0 0 18px rgba(0, 0, 0, 0.4);
+            border: 1px solid #252525;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #00e676;
+        }
+
+        /* Input + Textarea */
+        textarea {
+            background: #1f1f1f;
+            border: 1px solid #333;
+            padding: 12px;
+            width: 100%;
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
+            margin-top: 10px;
+        }
+
+        /* Star Rating */
+        .stars {
+            display: flex;
+            font-size: 32px;
+            cursor: pointer;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .stars span.active {
+            color: #ffcc00;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            background: #00cc66;
+            color: black;
+            border: none;
+            padding: 12px 20px;
+            width: 100%;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        .submit-btn:hover {
+            background: #00e676;
+        }
+
+        /* Back Link */
+        .back-link {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .back-link a {
+            color: #00e676;
+            text-decoration: none;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Login warning message */
+        .login-warning {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            color: #ff6666;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="review-container">
+    
+    <h1>Add Review for {{ album.title }}</h1>
+
+    <!-- User must be logged in -->
+    {% if not user.is_authenticated %}
+        <p class="login-warning">
+            You must <a href="{% url 'login' %}" style="color:#00e676;">login</a> to submit a review.
+        </p>
+        <div class="back-link">
+            <a href="{% url 'album_detail' album_id %}">← Back to Album</a>
+        </div>
+        {% comment %} STOP RENDERING HERE {% endcomment %}
+        {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- STAR RATING -->
+        <label style="font-weight:bold;">Rating:</label>
+        <div class="stars" id="starRating">
+            <span data-value="1">&#9733;</span>
+            <span data-value="2">&#9733;</span>
+            <span data-value="3">&#9733;</span>
+            <span data-value="4">&#9733;</span>
+            <span data-value="5">&#9733;</span>
+        </div>
+        <input type="hidden" name="rating" id="ratingInput" required>
+
+        <!-- COMMENT BOX -->
+        <label style="font-weight:bold;">Comment:</label>
+        <textarea name="comment" rows="5" placeholder="Write your thoughts..." required></textarea>
+
+        <!-- SUBMIT -->
+        <button type="submit" class="submit-btn">Submit Review</button>
+    </form>
+
+    <div class="back-link">
+        <a href="{% url 'album_detail' album_id %}">← Back to Album</a>
+    </div>
+
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div id="popup-message" class="popup-message">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+</body>
+</html>

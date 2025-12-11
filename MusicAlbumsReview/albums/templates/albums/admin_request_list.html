@@ -1,0 +1,57 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Album Requests</title>
+    <link rel="stylesheet" href="{% static 'albums/css/styles.css' %}">
+</head>
+
+<body>
+
+<a href="{% url 'home' %}" class="back-btn">← Back to Home</a>
+
+<h1 style="margin-left:40px;">📨 Album Requests</h1>
+
+<div style="width: 90%; margin: auto; margin-top: 30px;">
+
+    {% if requests %}
+        <table style="width:100%; border-collapse: collapse; margin-bottom:40px;">
+            <tr style="background:#1f1f1f;">
+                <th style="padding:12px; border-bottom:1px solid #333;">User</th>
+                <th style="padding:12px; border-bottom:1px solid #333;">Album Title</th>
+                <th style="padding:12px; border-bottom:1px solid #333;">Artist</th>
+                <th style="padding:12px; border-bottom:1px solid #333;">Message</th>
+                <th style="padding:12px; border-bottom:1px solid #333;">Action</th>
+            </tr>
+
+            {% for req in requests %}
+                <tr style="background:#141414;">
+                    <td style="padding:12px;">{{ req.user.username }}</td>
+                    <td style="padding:12px;">{{ req.requested_title }}</td>
+                    <td style="padding:12px;">{{ req.requested_artist }}</td>
+                    <td style="padding:12px;">{{ req.message }}</td>
+                    <td style="padding:12px;">
+                        <a href="{% url 'admin_delete_request' req._id %}" 
+                           style="color:#ff5252; font-weight:bold;">
+                           Delete
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    {% else %}
+        <p style="color:#aaa; font-size:18px;">No album requests yet.</p>
+    {% endif %}
+
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="popup-message">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+</body>
+</html>

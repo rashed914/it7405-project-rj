@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+env/
+web-it7405/
+
+# Django stuff
+db.sqlite3
+staticfiles/
+
+# VS Code
+.vscode/
+
+# Byte-compiled
+*.pyo
+*.pyd
+
+# Logs
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Environment variables
+.env
+
+# MongoDB dumps
+*.bson
+*.json

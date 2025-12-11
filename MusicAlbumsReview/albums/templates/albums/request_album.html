@@ -1,0 +1,40 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Request an Album</title>
+    <link rel="stylesheet" href="{% static 'albums/css/styles.css' %}">
+</head>
+
+<body>
+
+<a href="{% url 'home' %}" class="back-btn">← Back to Home</a>
+
+<div style="width: 40%; margin: auto;">
+    <h1>🎵 Request a New Album</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Album Title</label>
+        <input type="text" name="title" required>
+
+        <label>Artist</label>
+        <input type="text" name="artist" required>
+
+        <label>Message (optional)</label>
+        <textarea name="message"></textarea>
+
+        <button type="submit" class="submit-btn">Submit Request</button>
+    </form>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="popup-message">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+</body>
+</html>

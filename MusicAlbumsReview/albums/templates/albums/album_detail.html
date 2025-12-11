@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ album.title }} – Album Details</title>
+
+    <link rel="stylesheet" href="{% static 'albums/css/styles.css' %}">
+    <script src="{% static 'albums/js/main.js' %}" defer></script>
+
+
+
+
+    <style>
+        .album-header {
+            display: flex;
+            gap: 40px;
+            padding: 40px;
+        }
+
+        .detail-cover {
+            width: 350px;
+            border-radius: 15px;
+            box-shadow: 0 0 18px rgba(0, 0, 0, 0.4);
+        }
+
+        .album-info {
+            padding-top: 20px;
+        }
+
+        .album-info h1 {
+            font-size: 42px;
+            margin: 0;
+        }
+
+        .album-info h2 {
+            margin: 10px 0 20px;
+            color: #bbbbbb;
+        }
+
+        .add-review-btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #00cc66;
+            color: black;
+            font-weight: bold;
+            border-radius: 10px;
+            margin-top: 20px;
+            transition: 0.25s;
+        }
+
+        .add-review-btn:hover {
+            background: #00e676;
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            padding: 20px 40px;
+        }
+
+        .reviews-section h2 {
+            font-size: 30px;
+        }
+
+        .review-card {
+            background: #161616;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #252525;
+            margin-bottom: 20px;
+        }
+
+        .star {
+            color: gold;
+            font-size: 20px;
+        }
+
+        .no-reviews {
+            color: #aaa;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<a href="{% url 'home' %}" class="back-btn">← Back to Home</a>
+
+<!-- ALBUM HEADER SECTION -->
+<div class="album-header">
+    <img class="detail-cover" src="{{ album.cover_url }}" alt="{{ album.title }}">
+
+    <div class="album-info">
+        <h1>{{ album.title }}</h1>
+        <h2>{{ album.artist }}</h2>
+
+        <p style="color:#ccc; font-size: 18px;">
+            {{ album.genre }} • {{ album.year }}
+        </p>
+<a class="details-btn" href="{% url 'save_to_playlist' album.id_str %}">
+    ❤️ Save to Playlist
+</a>
+
+
+        <!-- ADD REVIEW BUTTON OR LOGIN WARNING -->
+        {% if user.is_authenticated %}
+            <a href="{% url 'add_review' album_id %}" class="add-review-btn">Write a Review</a>
+        {% else %}
+            <p style="margin-top: 20px; color:#aaa;">
+                You must <a href="{% url 'login' %}" style="color:#00e676;">login</a> to write a review.
+            </p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- REVIEWS SECTION -->
+<div class="reviews-section">
+    <h2>Reviews</h2>
+
+    {% if reviews %}
+        {% for r in reviews %}
+        <div class="review-card">
+            <h3 style="margin:0;">
+                {{ r.username }}
+
+                <!-- Star rating visual -->
+                {% for i in "12345" %}
+                    {% if forloop.counter <= r.rating %}
+                        <span class="star">★</span>
+                    {% else %}
+                        <span class="star" style="color:#555;">☆</span>
+                    {% endif %}
+                {% endfor %}
+            </h3>
+
+            <p style="margin-top:10px;">{{ r.comment }}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-reviews">No reviews yet.</p>
+    {% endif %}
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div id="popup-message" class="popup-message">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+</body>
+</html>

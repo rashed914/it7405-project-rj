@@ -1,0 +1,83 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard – Album Requests</title>
+    <link rel="stylesheet" href="{% static 'albums/css/styles.css' %}">
+</head>
+
+<body>
+
+<!-- BACK TO HOME -->
+<a href="{% url 'home' %}" class="back-btn">← Back to Home</a>
+
+<h1 style="margin-left:40px;">📊 Admin Dashboard – Album Requests</h1>
+
+<div style="width: 90%; margin: auto; margin-top: 25px;">
+
+    {% if requests %}
+        <table style="width:100%; border-collapse: collapse;">
+            <tr style="background:#1f1f1f;">
+                <th style="padding:12px; border-bottom:1px solid #333;">User</th>
+                <th style="padding:12px; border-bottom:1px solid #333;">Album Title</th>
+                <th style="padding:12px; border-bottom:1px solid #333;">Artist</th>
+                <th style="padding:12px; border-bottom:1px solid #333;">Message</th>
+                <th style="padding:12px; border-bottom:1px solid #333;">Date</th>
+                <th style="padding:12px; border-bottom:1px solid #333;">Status</th>
+                <th style="padding:12px; border-bottom:1px solid #333;">Action</th>
+            </tr>
+
+            {% for item in requests %}
+                <tr style="background:#141414;">
+                    <td style="padding:12px;">{{ item.user.username }}</td>
+                    <td style="padding:12px;">{{ item.requested_title }}</td>
+                    <td style="padding:12px;">{{ item.requested_artist }}</td>
+                    <td style="padding:12px;">{{ item.message|default:"—" }}</td>
+                    <td style="padding:12px;">{{ item.created_at|date:"Y-m-d H:i" }}</td>
+
+                    <!-- STATUS COLUMN -->
+                    <td style="padding:12px;">
+                        {% if item.status == "pending" %}
+                            <span style="color:#ffeb3b; font-weight:bold;">Pending ⏳</span>
+                        {% else %}
+                            <span style="color:#00e676; font-weight:bold;">Completed ✔</span>
+                        {% endif %}
+                    </td>
+
+                    <!-- ACTIONS COLUMN -->
+                    <td style="padding:12px;">
+
+                        {% if item.status == "pending" %}
+                            <a href="{% url 'admin_mark_completed' item.id_str %}"
+                                style="color:#00e676; font-weight:bold; margin-right:10px;">
+                                Mark Completed
+                            </a>
+                        {% endif %}
+
+                        <a href="{% url 'admin_delete_album_request' item.id_str %}"
+                           style="color:#ff5252; font-weight:bold;">
+                            Delete
+                        </a>
+
+                    </td>
+
+                </tr>
+            {% endfor %}
+        </table>
+
+    {% else %}
+        <p style="color:#aaa; font-size:18px;">No album requests found.</p>
+    {% endif %}
+</div>
+
+
+<!-- POPUP MESSAGES -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="popup-message">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+</body>
+</html>

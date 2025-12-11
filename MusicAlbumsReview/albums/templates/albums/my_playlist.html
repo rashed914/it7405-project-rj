@@ -1,0 +1,70 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Playlist</title>
+
+    <link rel="stylesheet" href="{% static 'albums/css/styles.css' %}">
+    <script src="{% static 'albums/js/main.js' %}" defer></script>
+</head>
+
+<body>
+
+<div class="playlist-container">
+
+    <!-- BACK TO HOME BUTTON -->
+    <a href="{% url 'home' %}" class="back-btn">← Back to Home</a>
+
+    <h1 class="playlist-title">🎧 My Playlist</h1>
+
+    {% if albums and albums|length > 0 %}
+        <div class="playlist-grid">
+            {% for album in albums %}
+                <div class="playlist-card">
+
+                    <img src="{{ album.cover_url }}" class="playlist-cover" alt="{{ album.title }}">
+
+                    <div class="playlist-info">
+                        <h3>{{ album.title }}</h3>
+                        <p>{{ album.artist }}</p>
+
+                        <div class="playlist-actions">
+                            <a class="view-btn" href="{% url 'album_detail' album.id_str %}">
+                                View
+                            </a>
+
+                            <a class="remove-btn" href="{% url 'remove_from_playlist' album.id_str %}">
+                                Remove
+                            </a>
+
+                        
+
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <p class="empty-message">Your playlist is empty 🎶</p>
+    {% endif %}
+</div>
+
+<!-- POPUP MESSAGE (top-right) -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="popup-message">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+</body>
+</html>
