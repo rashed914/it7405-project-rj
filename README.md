@@ -17,7 +17,7 @@ conda create -n web-it7405 python=3.10
 
 conda activate web-it7405
 
-#Install Dependencies (make sure that you are in the right folder which is MusicAlbumsReview because everything is there)
+#Install Dependencies (make sure that you are in the right folder which is 'MusicAlbumsReview' because everything is there)
 
 pip install -r requirements.txt
 
